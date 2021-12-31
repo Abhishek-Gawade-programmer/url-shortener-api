@@ -25,6 +25,10 @@ class URL(models.Model):
     def __str__(self):
         return self.code
 
+    def click(self):
+        self.clicks = models.F("clicks") + 1
+        self.save()
+
     def save(self, *args, **kwargs):
         if not self.id:
             super().save(*args, **kwargs)
