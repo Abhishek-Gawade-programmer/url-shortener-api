@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from rest_framework.response import Response
 from .models import URL
 from .permissions import IsOwnerOrReadOnly
-from .serializers import URLSerializer
+from .serializers import URLSerializer, UserSerializer
 
 
 def url(request, code):
@@ -52,3 +52,12 @@ def url_detail(request, pk):
     elif request.method == "DELETE":
         url.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(("POST",))
+def user_create(request):
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
